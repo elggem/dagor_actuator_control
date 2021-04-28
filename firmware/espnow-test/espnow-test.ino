@@ -5,7 +5,7 @@
 
 //######_ESPNOW_######
 typedef struct struct_message {
-    String function;
+    char function;
     float value;
 } struct_message;
 
@@ -100,7 +100,7 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 
 void sendData(){
   Serial.println("Sending some data");
-  outputData.function = "A";
+  outputData.function = 'A';
   outputData.value = 42.0;
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &outputData, sizeof(outputData));
   Serial.println(result);
