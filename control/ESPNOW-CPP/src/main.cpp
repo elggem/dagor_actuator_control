@@ -1,4 +1,6 @@
 /*
+TBD
+
 Etienne Arlaud
 */
 
@@ -18,17 +20,16 @@ using namespace std;
 
 //######_ESPNOW_######
 typedef struct struct_message {
-    String function;
+    char* function;
     float value;
 } struct_message;
 
 struct_message inputData;
 struct_message outputData;
-esp_now_peer_info_t peerInfo;
 
-static uint8_t my_mac[6] = {0xF8, 0x1A, 0x67, 0xb7, 0xEB, 0x0B};
-static uint8_t dest_mac[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-static uint8_t ESP_mac[6] = {0xB4,0xE6,0x2D,0xB5,0x9F,0x85};
+static uint8_t my_mac[6] = {0xE8, 0x94, 0xF6, 0x27, 0xD1, 0xE6};
+static uint8_t dest_mac[6] = {0x24, 0x0A, 0xC4, 0x60, 0x0B, 0x5C};
+static uint8_t broadcastAddress[6] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
 
 ESPNOW_manager *handler;
 
@@ -39,6 +40,8 @@ void callback(uint8_t src_mac[6], uint8_t *data, int len) {
 	memcpy(handler->mypacket.wlan.actionframe.content.payload, data, 6);
 	//handler->set_dst_mac(dest_mac);
 	handler->send();
+
+    printf("received %d chars long\n",len);
 }
 
 int main(int argc, char **argv) {
@@ -46,9 +49,9 @@ int main(int argc, char **argv) {
 
 	nice(-20);
 
-	handler = new ESPNOW_manager(argv[1], DATARATE_24Mbps, CHANNEL_freq_9, my_mac, dest_mac, false);
+	handler = new ESPNOW_manager(argv[1], DATARATE_24Mbps, CHANNEL_freq_1, my_mac, dest_mac, false);
 
-	handler->set_filter(ESP_mac, dest_mac);
+	//handler->set_filter(broadcastAddress, dest_mac);
 
 	handler->set_recv_callback(&callback);
 
