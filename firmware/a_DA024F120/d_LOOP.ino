@@ -10,7 +10,7 @@ void loop() {
   // These functions have to run as fast as possible
   timeManagement();
   motor.loopFOC();
-  command.run();
+  //command.run();
   motor.move();
 
   float ea = motor.electricalAngle();

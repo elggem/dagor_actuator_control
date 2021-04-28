@@ -17,7 +17,7 @@
 const byte pp = 7;                             //BLDC motor number of pole pairs
 const float phaseRes = 1.0;                  //Phase winding resistance [ohms]
 const float sourceVoltage = 12;                //Voltage of your power source [Volts]
-const float maxPowersourceCurrent = 3.0;       //Very rough approximation of max current from the power source [Amps]
+const float maxPowersourceCurrent = 1.0;       //Very rough approximation of max current from the power source [Amps]
                                                //This is not the phase current through the motor.
 const String controlType = "C0";               //control type: C0 -> torque (voltage)
                                                       // C1 -> velocity

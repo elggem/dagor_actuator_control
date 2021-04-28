@@ -42,8 +42,8 @@ if(
 }
 
 $db = array(
-    "8C:CE:4E:8E:DC:30" => "DAGOR-DEV-v6",
-    "8C:CE:4E:8E:32:88" => "DAGOR-DEV-v6"
+    "8C:CE:4E:8E:DC:30" => "DAGOR-DEV-v10",
+    "8C:CE:4E:8E:32:88" => "DAGOR-DEV-v10"
 );
 
 if(isset($db[$_SERVER['HTTP_X_ESP32_STA_MAC']])) {

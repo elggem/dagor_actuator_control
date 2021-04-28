@@ -2,10 +2,10 @@
 #include <WiFi.h>
 #include <esp_wifi_internal.h>
 
-
 //######_ESPNOW_######
 typedef struct struct_message {
-    char function;
+    char motor_id = 'M';
+    char function = '\0';
     float value;
 } struct_message;
 
@@ -14,7 +14,8 @@ struct_message outputData;
 esp_now_peer_info_t peerInfo;
 
 // Master Controller Address
-uint8_t broadcastAddress[] = {0xE8, 0x94, 0xF6, 0x27, 0xD1, 0xE6};
+//uint8_t broadcastAddress[] = {0xE8, 0x94, 0xF6, 0x27, 0xD1, 0xE6};
+uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 //------------------------------------------------------------------------------------------
 
@@ -27,8 +28,8 @@ void setup() {
 
 void loop() {
 
-  sendData();
-  delay(1000);
+//  sendData();
+//  delay(10);
 }
 
 
@@ -71,12 +72,19 @@ void espNowInit(){
 
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   memcpy(&inputData, incomingData, sizeof(inputData));
-  Serial.print("Bytes received: ");
-  Serial.println(len);
-  Serial.print("Function: ");
-  Serial.println(inputData.function);
-  Serial.print("Value: ");
-  Serial.println(inputData.value);
+//  Serial.print("Bytes received: ");
+//  Serial.println(len);
+//  Serial.print("Motor ID: ");
+//  Serial.println(inputData.motor_id);
+//  Serial.print("Function: ");
+//  Serial.println(inputData.function);
+//  Serial.print("Value: ");
+//  Serial.println(inputData.value);
+
+  String espNowInput = String(inputData.motor_id) + String(inputData.function) + String(inputData.value,3);
+//  char wirelessCommand[10]; 
+//  espNowInput.toCharArray(wirelessCommand, sizeof(wirelessCommand));
+  Serial.println(espNowInput);
 
 //  if (inputData.function == "pos"){
 //    sendData();
@@ -99,11 +107,12 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 }
 
 void sendData(){
-  Serial.println("Sending some data");
-  outputData.function = 'A';
+//  Serial.println("Sending some data");
+  outputData.motor_id = 'M';
+//  outputData.function = '\0';
   outputData.value = 42.0;
   esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *) &outputData, sizeof(outputData));
-  Serial.println(result);
+//  Serial.println(result);
 }
 
 // Callback when data is sent

@@ -102,7 +102,9 @@ void SimpleFOCinit(){
   // define the motor id
   command.add(motorID, onMotor, " BLDC");
   if (!commandDebug) command.verbose = VerboseMode::nothing;
-
+  commandEspNow.add(motorID, onMotor, " BLDC");
+  if (!commandDebug) commandEspNow.verbose = VerboseMode::nothing;
+  
   motor.PID_current_q.limit = phaseRes*maxPowersourceCurrent;
   motor.PID_current_d.limit = phaseRes*maxPowersourceCurrent;
   

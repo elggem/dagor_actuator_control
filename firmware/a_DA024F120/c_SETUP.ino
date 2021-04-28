@@ -1,10 +1,7 @@
-#include <WiFi.h>
-#include <HTTPClient.h>
-#include <HTTPUpdate.h>
 
 static const char* ssid = "Spener";
 static const char* password = "MoMaCaLa";
-String version = "DAGOR-DEV-v6"; 
+String version = "DAGOR-DEV-v10"; 
 
 //###########################################
 // SETUP
@@ -45,6 +42,7 @@ void setup() {
   }
 
   WiFi.disconnect(true);
+  espNowInit();
 
   gpio_init();
   spi_init();
