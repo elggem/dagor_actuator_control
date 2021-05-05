@@ -42,8 +42,12 @@ if(
 }
 
 $db = array(
-    "8C:CE:4E:8E:DC:30" => "DAGOR-DEV-v10",
-    "8C:CE:4E:8E:32:88" => "DAGOR-DEV-v10"
+    "8C:CE:4E:8E:2A:50" => "DAGOR-DEV-v11", // A
+    "8C:CE:4E:8E:DC:30" => "DAGOR-DEV-v11", // B
+    "8C:CE:4E:92:C6:4C" => "DAGOR-DEV-v11", // C
+    "8C:CE:4E:8E:2A:58" => "DAGOR-DEV-v11", // D
+    "8C:CE:4E:8E:32:88" => "DAGOR-DEV-v11", // E
+    "8C:CE:4E:8E:3D:FC" => "DAGOR-DEV-v11"  // F
 );
 
 if(isset($db[$_SERVER['HTTP_X_ESP32_STA_MAC']])) {

@@ -37,7 +37,7 @@ void loop() {
 #define TRY_ESP_ACTION(action, name) if(action == ESP_OK) {Serial.println("\t+ "+String(name));} else {Serial.println("----------Error while " + String(name) + " !---------------");}
 
 #define CHANNEL 1
-#define DATARATE WIFI_PHY_RATE_24M
+#define DATARATE WIFI_PHY_RATE_1M_L
 
 void espNowInit(){
   // Init ESP-NOW

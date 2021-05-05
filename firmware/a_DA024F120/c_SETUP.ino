@@ -1,7 +1,7 @@
 
 static const char* ssid = "Spener";
 static const char* password = "MoMaCaLa";
-String version = "DAGOR-DEV-v10"; 
+String version = "DAGOR-DEV-v11"; 
 
 //###########################################
 // SETUP

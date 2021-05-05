@@ -17,7 +17,7 @@
 const byte pp = 7;                             //BLDC motor number of pole pairs
 const float phaseRes = 1.0;                  //Phase winding resistance [ohms]
 const float sourceVoltage = 12;                //Voltage of your power source [Volts]
-const float maxPowersourceCurrent = 1.0;       //Very rough approximation of max current from the power source [Amps]
+const float maxPowersourceCurrent = 2.0;       //Very rough approximation of max current from the power source [Amps]
                                                //This is not the phase current through the motor.
 const String controlType = "C0";               //control type: C0 -> torque (voltage)
                                                       // C1 -> velocity
@@ -58,9 +58,13 @@ const float vp = 0.1;               //Velocity control loop PROPORTIONAL gain va
 const float vi = 1;                 //Velocity control loop INTEGRAL gain value       - VI
 const float vd = 0;                 //Velocity control loop DERIVATIVE gain value     - VD
 const float lpVelFilter = 0.000;    //Velocity measurement low-pass filter            - VF
-const float cp = 10;
+
+const float cp = 0.1;
 const float ci = 200;
 const float cd = 0;
+const float lpCurFilter = 0.000;
+const float lpCurRamp = 100;
+
 const float ap = 10;                //Position control loop PROPORTIONAL gain value   - AP
 const float ai = 0;                 //Position control loop INTEGRAL gain value       - AI
 const float ad = 1;                 //Position control loop DERIVATIVE gain value     - AD

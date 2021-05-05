@@ -15,9 +15,9 @@ void loop() {
 
   float ea = motor.electricalAngle();
   DQCurrent_s current = current_sense.getFOCCurrents(ea);
-  //Serial.print(current.d);
-  //Serial.print(", ");
-  //Serial.println(current.q);
+//  Serial.print(current.d);
+//  Serial.print(", ");
+//  Serial.println(current.q);
   //printCurrents(true);
   
   /*
