@@ -13,6 +13,10 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <HTTPUpdate.h>
+#include <Preferences.h>
+
+// calibration preferences.h to store values
+Preferences preferences;
 
 
 //#######_THREE PHASE DRIVER - DRV8305_########
@@ -52,19 +56,7 @@ void onMotor(char* cmd){ command.motor(&motor, cmd); }
 Commander commandEspNow = Commander();
 void onMotorEspNow(char* cmd){ commandEspNow.motor(&motor, cmd); }
 
-//######_ESPNOW_######
-typedef struct struct_message {
-    char motor_id = 'M';
-    char function = '\0';
-    float value;
-} struct_message;
 
-struct_message inputData;
-struct_message outputData;
-esp_now_peer_info_t peerInfo;
-
-// Master Controller Address
-uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 //######_SETUP FUNCTIONS INIT_######
 void SimpleFOCinit();

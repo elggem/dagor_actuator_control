@@ -12,6 +12,9 @@ void SimpleFOCinit(){
   _delay(500);
 
   sensor.init();                  // Initialise magnetic sensor hardware
+
+
+  
   motor.linkSensor(&sensor);      // Link sensor to motor instance  
   
   // driver config, power supply voltage [V]
@@ -21,6 +24,7 @@ void SimpleFOCinit(){
   motor.linkDriver(&driver);
 
   Serial.println("DAGOR: Init current sense");
+
   //current_dc_calib(true); //XX
   // current sense init hardware
   current_sense.init();
@@ -96,7 +100,7 @@ void SimpleFOCinit(){
   if (skipCalibration && natDirection == "CW") motor.initFOC(elecOffset,CW);              // start FOC
   else if (skipCalibration && natDirection == "CCW") motor.initFOC(elecOffset,CCW);       // start FOC
   else motor.initFOC();                                         // align sensor/ encoder and start FOC
-  
+ 
   _delay(500);
 
   // define the motor id
@@ -107,7 +111,7 @@ void SimpleFOCinit(){
   
   motor.PID_current_q.limit = phaseRes*maxPowersourceCurrent;
   motor.PID_current_d.limit = phaseRes*maxPowersourceCurrent;
-  
+
   Serial.println("DAGOR: Ready BLDC.");
   
 }

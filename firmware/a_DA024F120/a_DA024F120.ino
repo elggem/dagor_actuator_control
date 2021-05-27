@@ -17,7 +17,7 @@
 const byte pp = 7;                             //BLDC motor number of pole pairs
 const float phaseRes = 1.0;                  //Phase winding resistance [ohms]
 const float sourceVoltage = 12;                //Voltage of your power source [Volts]
-const float maxPowersourceCurrent = 2.0;       //Very rough approximation of max current from the power source [Amps]
+const float maxPowersourceCurrent = 3.0;       //Very rough approximation of max current from the power source [Amps]
                                                //This is not the phase current through the motor.
 const String controlType = "C0";               //control type: C0 -> torque (voltage)
                                                       // C1 -> velocity
@@ -79,20 +79,22 @@ const float velocityLimit = 2000;   //Velocity limit [rpm]                      
 //########_EXTRA CONFIGURATON_##########
 const byte maxTemp = 80;            // Maximum temperature if the power-stage [°C]
 const float overTempTime = 3;       // Time in an over-temperature senario to disable the controller [seconds]
-const float sensorOffset = 0.0;     // Position offset, used to define an absolute 0 position on the motor's rotor [rads]
+float sensorOffset = 0.0;     // Position offset, used to define an absolute 0 position on the motor's rotor [rads]
 const int motionDownSample = 0;     // Downsample the motion control loops with respect to the torque control loop [amount of loops]
 const int callerFixedFreq = 5;      // Frequency of the fixed rate function caller in void loop [hertz]
-const float alignStrength = 1.5;    // Percentage of power used to calibrate the sensor on start-up
+const float alignStrength = 2.0;    // Percentage of power used to calibrate the sensor on start-up
 char motorID = 'M';                 // Motor ID used for the commander interface, can be any character 
                                     // (a unique ID is useful for multi-board proyects)
 bool trueTorque = true;             // True torque mode, current sensing or voltage control mode.
-bool commandDebug = true;           // Enable/ disable commander serial print 
+bool commandDebug = false;           // Enable/ disable commander serial print 
 bool focModulation = true;          // Field oriented control modulation type: true -> Sine PWM
                                                                            // false -> Space Vector PWM
+
 bool skipCalibration = false;       // Skip the calibration on start-up
                                     // electric angle offset and natural direction printed on start-up
-const float elecOffset = 0.0;       // Printed as: "MOT: Zero elec. angle: X.XX"
+float elecOffset = 0.0;       // Printed as: "MOT: Zero elec. angle: X.XX"
 String natDirection = "CW";         // Can be either CW or CCW   
+
 
 
 //#######_LIST OF COMMANDS_#######

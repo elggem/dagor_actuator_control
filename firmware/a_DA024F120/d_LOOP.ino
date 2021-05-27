@@ -4,30 +4,41 @@
 //###########################################
 
 // Do not add delay inside the loop void.
-
-
 void loop() {
+  
   // These functions have to run as fast as possible
   timeManagement();
+
   motor.loopFOC();
   //command.run();
   motor.move();
 
+  /*
   float ea = motor.electricalAngle();
   DQCurrent_s current = current_sense.getFOCCurrents(ea);
-//  Serial.print(current.d);
-//  Serial.print(", ");
-//  Serial.println(current.q);
-  //printCurrents(true);
-  
-  /*
-  PhaseCurrent_s currents = current_sense.getPhaseCurrents();
-  Serial.print(currents.a); // milli Amps
-  Serial.print("\t");
-  Serial.print(currents.b); // milli Amps
-  Serial.print("\t");
-  Serial.println(currents.c); // milli Amps
+  Serial.print(current.d);
+  Serial.print(", ");
+  Serial.println(current.q);
+  printCurrents(true);
   */
+  
+  
+//  PhaseCurrent_s currents = current_sense.getPhaseCurrents();
+//  Serial.print(currents.a); // milli Amps
+//  Serial.print("\t");
+//  Serial.print(currents.b); // milli Amps
+//  Serial.print("\t");
+//  Serial.println(currents.c); // milli Amps
+  
+//  Serial.print("\t");
+//
+//  wifi_ps_type_t config;
+//  esp_wifi_get_ps(&config);
+//  Serial.println(config);
+
+
+  // tested: wifi_ant_config.tx_ant_mode (stays), max_tx_power (stays), wifi_ps_type_t
+  
 
   // Fixed rate functions
   // Functions inside this "if" will execute at a 5hz rate. Un/ comment the functions that you wish to use.
@@ -40,7 +51,12 @@ void loop() {
     //voltageMonitor(true);
     //rotorPosition();
     //printCurrents(true);
+
+//    espNowBroadcastStatus();
+    //Serial.print("loop() running on core ");
+    //Serial.println(xPortGetCoreID());
+    
   
   }
-  
+
 }
