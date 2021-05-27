@@ -14,8 +14,8 @@ typedef struct struct_message {
 typedef struct struct_status_message {
     float position = 0.0;
     float temperature = 0.0;
-    float current_d = 0.0;
-    float current_q = 0.0;
+    float current_a = 0.0;
+    float current_b = 0.0;
 } struct_status_message;
 
 struct_message inputData;
@@ -33,21 +33,20 @@ void espNowBroadcastStatus(void *pvParameter){
     //Serial.print("espNowBroadcastStatus() running on core ");
     //Serial.println(xPortGetCoreID());
     
-    outputData.position = sensor.getAngle();
+    //outputData.position = sensor.getAngle();
     
     float vOut = analogRead(vTemp);
     outputData.temperature = (((vOut*3.3)/4095)-1.8577)/-0.01177;
     
-    float ea = motor.electricalAngle();
-    DQCurrent_s current = current_sense.getFOCCurrents(ea);
-    outputData.current_d = current.d;
-    outputData.current_q = current.q;
+    PhaseCurrent_s currents = current_sense.getPhaseCurrents();
+    outputData.current_a = currents.a;
+    outputData.current_b = currents.b;
     
     esp_err_t result = esp_now_send(master_mac, (uint8_t *) &outputData, sizeof(outputData));
   
     //Serial.println("Sent status package");
 
-    vTaskDelay(200 / portTICK_PERIOD_MS);
+    vTaskDelay(5 / portTICK_PERIOD_MS); //200hz
   }
 }
 
@@ -100,18 +99,18 @@ void espNowInit(){
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 
   if (compareMacs(master_mac, mac)) {
-      //Serial.println("received package from MASTER");
+      Serial.println("received package from MASTER");
 
       memcpy(&inputData, incomingData, sizeof(inputData));
 
       String espNowInput = String(inputData.motor_id) + String(inputData.function) + String(inputData.value,3);
-      //Serial.println("Received ESPNOW Command: " + espNowInput);
+      Serial.println("Received ESPNOW Command: " + espNowInput);
     
       char wirelessCommand[10]; 
       espNowInput.toCharArray(wirelessCommand, sizeof(wirelessCommand));
       commandEspNow.run(wirelessCommand);
 
-      esp_err_t result = esp_now_send(master_mac, (uint8_t *) &outputData, sizeof(outputData));
+      //esp_err_t result = esp_now_send(master_mac, (uint8_t *) &outputData, sizeof(outputData));
   } else {
     Serial.println("received package from not master");
   }
@@ -133,6 +132,6 @@ boolean compareMacs(const uint8_t * arrayA, const uint8_t * arrayB) {
 
 // Callback when data is sent
 void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
-//  Serial.print("Send Status:\t");
-//  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
+  //Serial.print("Send Status:\t");
+  //Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
 }
