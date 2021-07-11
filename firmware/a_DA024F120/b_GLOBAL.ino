@@ -9,6 +9,15 @@
 #include <SimpleFOC.h>
 #include <SPI.h>
 #include <esp_now.h>
+#include <esp_wifi_internal.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <HTTPUpdate.h>
+#include <Preferences.h>
+
+// calibration preferences.h to store values
+Preferences preferences;
+
 
 //#######_THREE PHASE DRIVER - DRV8305_########
 // Datasheet: www.ti.com/lit/ds/symlink/drv8305.pdf
@@ -47,18 +56,7 @@ void onMotor(char* cmd){ command.motor(&motor, cmd); }
 Commander commandEspNow = Commander();
 void onMotorEspNow(char* cmd){ commandEspNow.motor(&motor, cmd); }
 
-//######_ESPNOW_######
-typedef struct struct_message {
-    String function;
-    float value;
-} struct_message;
 
-struct_message inputData;
-struct_message outputData;
-esp_now_peer_info_t peerInfo;
-
-// Master Controller Address
-uint8_t broadcastAddress[] = {0x24, 0x6F, 0x28, 0x51, 0xED, 0xA4};
 
 //######_SETUP FUNCTIONS INIT_######
 void SimpleFOCinit();

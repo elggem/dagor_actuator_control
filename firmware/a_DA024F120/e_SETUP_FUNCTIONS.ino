@@ -12,6 +12,9 @@ void SimpleFOCinit(){
   _delay(500);
 
   sensor.init();                  // Initialise magnetic sensor hardware
+
+
+  
   motor.linkSensor(&sensor);      // Link sensor to motor instance  
   
   // driver config, power supply voltage [V]
@@ -21,11 +24,12 @@ void SimpleFOCinit(){
   motor.linkDriver(&driver);
 
   Serial.println("DAGOR: Init current sense");
-  current_dc_calib(true);
+
+  //current_dc_calib(true); //XX
   // current sense init hardware
   current_sense.init();
   current_sense.driverSync(&driver);
-  current_dc_calib(false);
+  //current_dc_calib(false); //XX
   
   // link the current sense to the motor
   if (trueTorque){
@@ -58,15 +62,15 @@ void SimpleFOCinit(){
   motor.PID_current_q.I = ci;
   motor.PID_current_q.D = cd;
   motor.PID_current_q.limit = phaseRes*maxPowersourceCurrent;
-  motor.PID_current_q.output_ramp = 100;
-  motor.LPF_current_q.Tf = 0.000;
+  motor.PID_current_q.output_ramp = lpCurRamp;
+  motor.LPF_current_q.Tf = lpCurFilter;
 
   motor.PID_current_d.P = cp;
   motor.PID_current_d.I = ci;
   motor.PID_current_d.D = cd;
   motor.PID_current_d.limit = phaseRes*maxPowersourceCurrent;
-  motor.PID_current_d.output_ramp = 100;
-  motor.LPF_current_d.Tf = 0.000;
+  motor.PID_current_d.output_ramp = lpCurRamp;
+  motor.LPF_current_d.Tf = lpCurFilter;
  
   // velocity PI controller parameters
   motor.PID_velocity.P = vp;
@@ -96,16 +100,18 @@ void SimpleFOCinit(){
   if (skipCalibration && natDirection == "CW") motor.initFOC(elecOffset,CW);              // start FOC
   else if (skipCalibration && natDirection == "CCW") motor.initFOC(elecOffset,CCW);       // start FOC
   else motor.initFOC();                                         // align sensor/ encoder and start FOC
-  
+ 
   _delay(500);
 
   // define the motor id
   command.add(motorID, onMotor, " BLDC");
   if (!commandDebug) command.verbose = VerboseMode::nothing;
-
+  commandEspNow.add(motorID, onMotor, " BLDC");
+  if (!commandDebug) commandEspNow.verbose = VerboseMode::nothing;
+  
   motor.PID_current_q.limit = phaseRes*maxPowersourceCurrent;
   motor.PID_current_d.limit = phaseRes*maxPowersourceCurrent;
-  
+
   Serial.println("DAGOR: Ready BLDC.");
   
 }
