@@ -99,12 +99,12 @@ int main(int argc, char **argv) {
 	nice(-20);
 
 	handler = new ESPNOW_manager(argv[1], DATARATE_24Mbps, CHANNEL_freq_1, my_mac, broadcast_mac, false);
-	handler->set_filter(A_mac, my_mac);
-        handler->set_filter(B_mac, my_mac);
-        handler->set_filter(C_mac, my_mac);
-        handler->set_filter(D_mac, my_mac);
-        handler->set_filter(E_mac, my_mac);
-        handler->set_filter(F_mac, my_mac);
+	//handler->set_filter(A_mac, my_mac);
+        //handler->set_filter(B_mac, my_mac);
+        //handler->set_filter(C_mac, my_mac);
+        //handler->set_filter(D_mac, my_mac);
+        //handler->set_filter(E_mac, my_mac);
+        //handler->set_filter(F_mac, my_mac);
 	handler->set_recv_callback(&receive_callback);
 	handler->start();
 
@@ -152,9 +152,6 @@ int main(int argc, char **argv) {
             value = atof(argv[4]);
             sendOffset(target_mac, value);
             break;
-	  default:
-            printf("Usage: sudo %s WIFI_NAME TARGET_ID COMMAND (R/S/O) VALUE\n", argv[0]);
-            return 1;
 	}
 
 	printf("Entering monitor mode\n");
