@@ -50,8 +50,11 @@ static uint8_t F_mac[6] = {0x8C, 0xCE, 0x4E, 0x8E, 0x3D, 0xFC};
 ESPNOW_manager *handler;
 
 void receive_callback(uint8_t src_mac[6], uint8_t *incomingData, int len) {
-    memcpy(&inputData, incomingData, sizeof(inputData));
-    printf("%.8f,%.2f,%.2f,%.2f\n", inputData.position, inputData.temperature, inputData.current_a, inputData.current_b); 
+    if (memcmp(my_mac, src_mac, sizeof(uint8_t)*6)) {
+      memcpy(&inputData, incomingData, sizeof(inputData));
+      printf("%x:%x:%x:%x:%x:%x,",src_mac[0],src_mac[1],src_mac[2],src_mac[3],src_mac[4],src_mac[5]); 
+      printf("%.8f,%.2f,%.2f,%.2f\n", inputData.position, inputData.temperature, inputData.current_a, inputData.current_b); 
+    }
 }
 
 void sendReset(uint8_t dst_mac[6]) {
