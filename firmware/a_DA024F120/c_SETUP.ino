@@ -53,11 +53,13 @@ void setup() {
   preferences.begin("dagor", false);
 
   // calibration
-  //skipCalibration = preferences.getBool("skipCalibration", false); // Skip the calibration on start-up
+  skipCalibration = preferences.getBool("skipCalibration", false); // Skip the calibration on start-up
   elecOffset      = preferences.getFloat("elecOffset", 0.0); // Printed as: "MOT: Zero elec. angle: X.XX"
   natDirection = preferences.getString("natDirection", "CW"); // Can be either CW or CCW     
   sensorOffset = preferences.getFloat("sensorOffset", 0.0);
-  Serial.printf("offset: %.2f\n", elecOffset);
+
+  Serial.printf("elecOffset: %.2f\n", elecOffset);
+  Serial.printf("sensorOffset: %.2f\n", sensorOffset);
 
   espNowInit(); 
 
@@ -69,7 +71,6 @@ void setup() {
 
   SimpleFOCinit();
 
-  
   xTaskCreatePinnedToCore(
         espNowBroadcastStatus, /* Function to implement the task */
         "BroadcastStatus", /* Name of the task */
@@ -78,26 +79,4 @@ void setup() {
         0,  /* Priority of the task */
         &BroadcastStatusTask,  /* Task handle. */
         0); /* Core where the task should run */
-
-
-/*
-  if (skipCalibration == false) {
-    // this crashes with Guru Meditation Error: Core  1 panic'ed (Cache disabled but cached memory region accessed)
-    // how do we need to check if calibration was actually successful?
-    mcpwm_unit_t mcpwm_unit = (mcpwm_unit_t) 0;
-    mcpwm_stop(mcpwm_unit, MCPWM_TIMER_0);
-    mcpwm_stop(mcpwm_unit, MCPWM_TIMER_1);
-    mcpwm_stop(mcpwm_unit, MCPWM_TIMER_2);
-
-    Serial.println("recording calibration values");
-    Serial.println(motor.zero_electric_angle);
-
-    preferences.putBool("skipCalibration", true); // Skip the calibration on start-up from now on
-    preferences.putFloat("elecOffset", motor.zero_electric_angle); // Printed as: "MOT: Zero elec. angle: X.XX"
-    if (motor.sensor_direction == CW) preferences.putString("natDirection", "CW"); // Can be either CW or CCW   
-    if (motor.sensor_direction == CCW) preferences.putString("natDirection", "CCW"); // Can be either CW or CCW   
-
-    ESP.restart();
-  }
-  */
 }

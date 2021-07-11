@@ -27,6 +27,7 @@ void SimpleFOCinit(){
 
   //current_dc_calib(true); //XX
   // current sense init hardware
+  current_dc_calib(false);
   current_sense.init();
   current_sense.driverSync(&driver);
   //current_dc_calib(false); //XX

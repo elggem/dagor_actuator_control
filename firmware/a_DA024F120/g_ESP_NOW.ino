@@ -4,23 +4,6 @@
 #define CHANNEL 1
 #define DATARATE WIFI_PHY_RATE_24M
 
-//######_ESPNOW_######
-typedef struct struct_message {
-    char motor_id = 'M';
-    char function = '\0';
-    float value;
-} struct_message;
-
-typedef struct struct_status_message {
-    float position = 0.0;
-    float temperature = 0.0;
-    float current_a = 0.0;
-    float current_b = 0.0;
-} struct_status_message;
-
-struct_message inputData;
-struct_status_message outputData;
-esp_now_peer_info_t peerInfo;
 
 
 // Master Controller Address
@@ -30,23 +13,8 @@ uint8_t master_mac[] = {0xE8, 0x94, 0xF6, 0x27, 0xD1, 0xE6};
 void espNowBroadcastStatus(void *pvParameter){
 
   while (true) {
-    //Serial.print("espNowBroadcastStatus() running on core ");
-    //Serial.println(xPortGetCoreID());
-    
-    //outputData.position = sensor.getAngle();
-    
-    float vOut = analogRead(vTemp);
-    outputData.temperature = (((vOut*3.3)/4095)-1.8577)/-0.01177;
-    
-    PhaseCurrent_s currents = current_sense.getPhaseCurrents();
-    outputData.current_a = currents.a;
-    outputData.current_b = currents.b;
-    
     esp_err_t result = esp_now_send(master_mac, (uint8_t *) &outputData, sizeof(outputData));
-  
-    //Serial.println("Sent status package");
-
-    vTaskDelay(5 / portTICK_PERIOD_MS); //200hz
+    vTaskDelay(10 / portTICK_PERIOD_MS); //100hz
   }
 }
 
@@ -100,15 +68,46 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 
   if (compareMacs(master_mac, mac)) {
       Serial.println("received package from MASTER");
-
       memcpy(&inputData, incomingData, sizeof(inputData));
-
       String espNowInput = String(inputData.motor_id) + String(inputData.function) + String(inputData.value,3);
-      Serial.println("Received ESPNOW Command: " + espNowInput);
-    
-      char wirelessCommand[10]; 
-      espNowInput.toCharArray(wirelessCommand, sizeof(wirelessCommand));
-      commandEspNow.run(wirelessCommand);
+
+      if (inputData.motor_id == 'C') { 
+        Serial.println("Received ESPNOW CONTROL Command: " + espNowInput);
+
+        // Stop timer to enable EEPROM writing
+        mcpwm_unit_t mcpwm_unit = (mcpwm_unit_t) 0;
+        mcpwm_stop(mcpwm_unit, MCPWM_TIMER_0);
+        mcpwm_stop(mcpwm_unit, MCPWM_TIMER_1);
+        mcpwm_stop(mcpwm_unit, MCPWM_TIMER_2);
+      
+        if (inputData.function == 'R') {
+          // CR = reset calibration eeprom
+          Serial.println("resetting calibration values");
+          preferences.putBool("skipCalibration", false); // Skip the calibration on start-up from now on
+        } else if (inputData.function == 'S') {
+          // CS = store calibration eeprom
+          Serial.println("recording calibration values");
+          preferences.putBool("skipCalibration", true); // Skip the calibration on start-up from now on
+          preferences.putFloat("elecOffset", motor.zero_electric_angle); // Printed as: "MOT: Zero elec. angle: X.XX"
+          if (motor.sensor_direction == CW) preferences.putString("natDirection", "CW"); // Can be either CW or CCW   
+          if (motor.sensor_direction == CCW) preferences.putString("natDirection", "CCW"); // Can be either CW or CCW   
+        } else if (inputData.function == 'O') {
+          // CO = set offset
+          Serial.println("setting offset");
+          preferences.putFloat("sensorOffset", inputData.value);
+        }
+
+        // Restart
+        ESP.restart();
+
+      } else {
+        Serial.println("Received ESPNOW Command: " + espNowInput);
+        
+        char wirelessCommand[10]; 
+        espNowInput.toCharArray(wirelessCommand, sizeof(wirelessCommand));
+        commandEspNow.run(wirelessCommand);
+      }
+
 
       //esp_err_t result = esp_now_send(master_mac, (uint8_t *) &outputData, sizeof(outputData));
   } else {

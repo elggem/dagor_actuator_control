@@ -38,8 +38,14 @@ void loop() {
 
 
   // tested: wifi_ant_config.tx_ant_mode (stays), max_tx_power (stays), wifi_ps_type_t
-  
 
+    outputData.position = sensor.getAngle() - sensorOffset;
+
+    PhaseCurrent_s currents = current_sense.getPhaseCurrents();
+    outputData.current_a = currents.a;
+    outputData.current_b = currents.b;
+
+    
   // Fixed rate functions
   // Functions inside this "if" will execute at a 5hz rate. Un/ comment the functions that you wish to use.
   if(stateT >= 1000000/callerFixedFreq){
@@ -51,12 +57,10 @@ void loop() {
     //voltageMonitor(true);
     //rotorPosition();
     //printCurrents(true);
-
-//    espNowBroadcastStatus();
-    //Serial.print("loop() running on core ");
-    //Serial.println(xPortGetCoreID());
     
-  
+    float vOut = analogRead(vTemp);
+    outputData.temperature = (((vOut*3.3)/4095)-1.8577)/-0.01177;
+    
   }
 
 }
