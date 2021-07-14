@@ -171,11 +171,11 @@ int main(int argc, char **argv) {
          printf("ID: %d, Theta: %f, Phi: %f, Gamma: %f \n", legs[i].id, legs[i].theta, legs[i].phi, legs[i].gamma);
        }
 
-       float z = 150;
+       float z = 150; //150 piano
        float x = 10;
        float y = -20;
 
-       float speed= 2.25f;
+       float speed= 0.25f;
        bool risingZ = true;
        bool risingX = true;
        bool risingY = true;
@@ -185,7 +185,7 @@ int main(int argc, char **argv) {
        // leg2: D/B/F
 
        while(1) {	
-         usleep(1000*10);
+         usleep(10000); //1000hz
 
          inverseKinematics(&legs[0], z, x, y);
          inverseKinematics(&legs[1], z, x, y);
@@ -211,7 +211,7 @@ int main(int argc, char **argv) {
          // going down
 	 if(x>10) { risingX = false; if (risingY) y+=20; else y-=20; }
          // going up
-	 if(x<-45) { risingX = true; }
+	 if(x<-40) { risingX = true; }
 	 if(y>160) risingY = false;
          if(y<-60) risingY = true;
 
